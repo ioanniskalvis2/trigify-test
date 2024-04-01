@@ -6,19 +6,18 @@ export const jobsRouter = createTRPCRouter({
   getJobs: publicProcedure
     .input(
       z.object({
-        searchQuery: z.string(),
+        searchQuery: z.string().nullish(),
         take: z.number(),
         skip: z.number(),
-        limit: z.number(),
       }),
     )
     .query(async ({ ctx, input }) => {
       const { searchQuery, take, skip } = input;
       const jobs = await ctx.db.jobs.findMany({
         where: {
-          title: { contains: searchQuery },
+          title: { contains: searchQuery ?? "" },
         },
-        take,
+        take: take + 1,
         skip,
       });
       return jobs;

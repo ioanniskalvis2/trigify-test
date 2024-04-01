@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import Navbar from "~/components/common/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,6 +16,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
       <main className={`font-sans ${inter.variable}`}>
+        <Navbar />
         <Component {...pageProps} />
       </main>
     </ClerkProvider>
