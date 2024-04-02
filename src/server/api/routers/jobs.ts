@@ -14,6 +14,9 @@ export const jobsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { searchQuery, take, skip } = input;
       const jobs = await ctx.db.jobs.findMany({
+        orderBy: {
+          pdl_count: "desc",
+        },
         where: {
           title: { contains: searchQuery ?? "" },
         },

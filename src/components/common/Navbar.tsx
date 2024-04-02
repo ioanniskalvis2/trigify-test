@@ -4,7 +4,7 @@ const Navbar = () => {
   const { user } = useUser();
 
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar fixed top-0 z-10 bg-base-100">
       <div className="navbar-start">
         <div className="navbar-center">
           <a

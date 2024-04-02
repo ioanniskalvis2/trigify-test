@@ -21,6 +21,8 @@ export default function Home() {
     skip,
   }).data;
 
+  if (!jobs) return <div>Error</div>;
+
   return (
     <>
       <Head>
@@ -28,8 +30,8 @@ export default function Home() {
         <meta name="description" content="Trigify test by Ioannis Kalvis" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center  bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="flex w-full flex-col items-center p-8 lg:flex-row">
+      <main className="flex flex-col items-center">
+        <div className="flex w-full flex-col items-center p-20">
           <SearchBar
             onChange={(e) =>
               setJobInputs({
@@ -41,8 +43,8 @@ export default function Home() {
             placeholder="Search jobs"
           ></SearchBar>
         </div>
-        <div className="flex w-full flex-col items-center p-10 lg:flex-row">
-          {jobs?.slice(0, jobInputs.take)?.map((job) => {
+        <div className="flex w-full flex-col items-center p-10">
+          {jobs.slice(0, jobInputs.take).map((job) => {
             return (
               <Card
                 key={job.id}
@@ -54,7 +56,7 @@ export default function Home() {
             );
           })}
         </div>
-        <div className="join grid grid-cols-2">
+        <div className="join m-5 grid grid-cols-2">
           <button
             className="btn btn-outline join-item"
             disabled={jobInputs.skip === 0}
@@ -69,7 +71,7 @@ export default function Home() {
           </button>
           <button
             className="btn btn-outline join-item"
-            disabled={jobs && jobs.length <= jobInputs.take}
+            disabled={jobs.length <= jobInputs.take}
             onClick={() =>
               setJobInputs({
                 ...jobInputs,
