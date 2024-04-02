@@ -1,8 +1,6 @@
-import Head from "next/head";
 import { useState } from "react";
 import Card from "~/components/common/Card";
 import SearchBar from "~/components/common/Searchbar";
-import Spinner from "~/components/Spinner";
 import { api, type RouterInputs } from "~/utils/api";
 
 type JobInputs = RouterInputs["job"]["getJobs"];
