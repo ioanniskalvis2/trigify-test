@@ -14,69 +14,67 @@ export default function Home() {
 
   const { searchQuery, skip, take } = jobInputs;
 
-  const { data: jobs, status } = api.job.getJobs.useQuery({
+  const { data: jobs } = api.job.getJobs.useQuery({
     searchQuery,
     take,
     skip,
   });
 
   return (
-    status === "success" && (
-      <>
-        <main className="flex flex-col items-center">
-          <div className="flex w-full flex-col items-center p-20">
-            <SearchBar
-              onChange={(e) =>
-                setJobInputs({
-                  ...jobInputs,
-                  searchQuery: e.target.value,
-                  skip: 0,
-                })
-              }
-              placeholder="Search jobs"
-            ></SearchBar>
-          </div>
-          <div className="flex w-full flex-col items-center p-10">
-            {jobs?.slice(0, jobInputs.take).map((job) => {
-              return (
-                <Card
-                  key={job.id}
-                  id={job.id}
-                  top_related_titles={job.top_related_titles.slice(0, 3)}
-                  title={job.title}
-                  pdl_count={job.pdl_count}
-                ></Card>
-              );
-            })}
-          </div>
-          <div className="join m-5 grid grid-cols-2">
-            <button
-              className="btn btn-outline join-item"
-              disabled={jobInputs.skip === 0}
-              onClick={() =>
-                setJobInputs({
-                  ...jobInputs,
-                  skip: jobInputs.skip - jobInputs.take,
-                })
-              }
-            >
-              Previous page
-            </button>
-            <button
-              className="btn btn-outline join-item"
-              disabled={jobs && jobs.length <= jobInputs.take}
-              onClick={() =>
-                setJobInputs({
-                  ...jobInputs,
-                  skip: jobInputs.skip + jobInputs.take,
-                })
-              }
-            >
-              Next page
-            </button>
-          </div>
-        </main>
-      </>
-    )
+    <>
+      <main className="flex flex-col items-center">
+        <div className="flex w-full flex-col items-center p-20">
+          <SearchBar
+            onChange={(e) =>
+              setJobInputs({
+                ...jobInputs,
+                searchQuery: e.target.value,
+                skip: 0,
+              })
+            }
+            placeholder="Search jobs"
+          ></SearchBar>
+        </div>
+        <div className="flex w-full flex-col items-center p-10">
+          {jobs?.slice(0, jobInputs.take).map((job) => {
+            return (
+              <Card
+                key={job.id}
+                id={job.id}
+                top_related_titles={job.top_related_titles.slice(0, 3)}
+                title={job.title}
+                pdl_count={job.pdl_count}
+              ></Card>
+            );
+          })}
+        </div>
+        <div className="join m-5 grid grid-cols-2">
+          <button
+            className="btn btn-outline join-item"
+            disabled={jobInputs.skip === 0}
+            onClick={() =>
+              setJobInputs({
+                ...jobInputs,
+                skip: jobInputs.skip - jobInputs.take,
+              })
+            }
+          >
+            Previous page
+          </button>
+          <button
+            className="btn btn-outline join-item"
+            disabled={jobs && jobs.length <= jobInputs.take}
+            onClick={() =>
+              setJobInputs({
+                ...jobInputs,
+                skip: jobInputs.skip + jobInputs.take,
+              })
+            }
+          >
+            Next page
+          </button>
+        </div>
+      </main>
+    </>
   );
 }
