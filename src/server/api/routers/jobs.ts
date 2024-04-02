@@ -13,7 +13,7 @@ export const jobsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { searchQuery, take, skip } = input;
-      const jobs = await ctx.db.jobs.findMany({
+      const jobs = await ctx.db.job.findMany({
         orderBy: {
           pdl_count: "desc",
         },
@@ -23,12 +23,13 @@ export const jobsRouter = createTRPCRouter({
         take: take + 1,
         skip,
       });
+
       return jobs;
     }),
   getJobByTitle: publicProcedure
     .input(z.object({ jobTitle: z.string() }))
     .query(async ({ ctx, input }) => {
-      const job = await ctx.db.jobs.findFirst({
+      const job = await ctx.db.job.findFirst({
         where: {
           title: input.jobTitle,
         },

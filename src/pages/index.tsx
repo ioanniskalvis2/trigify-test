@@ -14,7 +14,7 @@ export default function Home() {
 
   const { searchQuery, skip, take } = jobInputs;
 
-  const { data: jobs } = api.job.getJobs.useQuery({
+  const { data: jobs, isLoading } = api.job.getJobs.useQuery({
     searchQuery,
     take,
     skip,
@@ -35,19 +35,25 @@ export default function Home() {
             placeholder="Search jobs"
           ></SearchBar>
         </div>
-        <div className="flex w-full flex-col items-center p-10">
-          {jobs?.slice(0, jobInputs.take).map((job) => {
-            return (
-              <Card
-                key={job.id}
-                id={job.id}
-                top_related_titles={job.top_related_titles.slice(0, 3)}
-                title={job.title}
-                pdl_count={job.pdl_count}
-              ></Card>
-            );
-          })}
-        </div>
+        {isLoading ? (
+          <>
+            <span className="loading loading-spinner text-neutral"></span>
+          </>
+        ) : (
+          <div className="flex w-full flex-col items-center p-10">
+            {jobs?.slice(0, jobInputs.take).map((job) => {
+              return (
+                <Card
+                  key={job.id}
+                  id={job.id}
+                  top_related_titles={job.top_related_titles.slice(0, 3)}
+                  title={job.title}
+                  pdl_count={job.pdl_count}
+                ></Card>
+              );
+            })}
+          </div>
+        )}
         <div className="join m-5 grid grid-cols-2">
           <button
             className="btn btn-outline join-item"
@@ -63,7 +69,7 @@ export default function Home() {
           </button>
           <button
             className="btn btn-outline join-item"
-            disabled={jobs && jobs.length <= jobInputs.take}
+            disabled={(jobs && jobs.length <= jobInputs.take) ?? !jobs}
             onClick={() =>
               setJobInputs({
                 ...jobInputs,
