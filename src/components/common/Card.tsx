@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { type RouterOutputs } from "~/utils/api";
 
 type CardProps = RouterOutputs["job"]["getJobByTitle"];
 
 const Card = (job: CardProps) => {
   const router = useRouter();
+  const currentPage = usePathname();
 
   if (!job) return <div>Error</div>;
 
@@ -23,7 +24,11 @@ const Card = (job: CardProps) => {
             <button
               key={`${title}-${job.id}`}
               className="btn btn-sm"
-              onClick={() => router.push(`jobs/${title.trim()}`)}
+              onClick={() =>
+                router.push(
+                  `${currentPage.includes("jobs") ? "" : "jobs/"}${title.trim()}`,
+                )
+              }
             >
               {title}
             </button>

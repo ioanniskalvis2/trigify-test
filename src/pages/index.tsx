@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Card from "~/components/common/Card";
 import SearchBar from "~/components/common/Searchbar";
+import Toast from "~/components/common/Toast";
 import { api, type RouterInputs } from "~/utils/api";
 
 type JobInputs = RouterInputs["job"]["getJobs"];
@@ -14,7 +15,11 @@ export default function Home() {
 
   const { searchQuery, skip, take } = jobInputs;
 
-  const { data: jobs, isLoading } = api.job.getJobs.useQuery({
+  const {
+    data: jobs,
+    isLoading,
+    isError,
+  } = api.job.getJobs.useQuery({
     searchQuery,
     take,
     skip,
@@ -39,6 +44,8 @@ export default function Home() {
           <>
             <span className="loading loading-spinner text-neutral"></span>
           </>
+        ) : isError ? (
+          <Toast message="There are no results based on this query" />
         ) : (
           <div className="flex w-full flex-col items-center p-10">
             {jobs?.slice(0, jobInputs.take).map((job) => {
