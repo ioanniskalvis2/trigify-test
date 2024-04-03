@@ -1,4 +1,5 @@
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 const Navbar = () => {
   const { user } = useUser();
@@ -7,13 +8,13 @@ const Navbar = () => {
     <div className="navbar fixed top-0 z-10 bg-base-100">
       <div className="navbar-start">
         <div className="navbar-center">
-          <a
+          <Link
             className="btn btn-ghost text-xl"
-            href="https://www.trigify.io/"
-            target="blank"
+            href="/"
+            title="Go to home page"
           >
             Trigify.io
-          </a>
+          </Link>
         </div>
       </div>
 

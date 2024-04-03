@@ -15,17 +15,16 @@ const JobPage: NextPage = () => {
     jobTitle: typeof title === "string" ? title : "",
   });
 
-  if (!job || isError)
-    return <Toast message="There are no results based on this job title" />;
-
   return (
     <main className="flex flex-col items-center">
       <div className="flex w-full flex-col items-center p-20">
         {isLoading ? (
           <span className="loading loading-spinner loading-lg"></span>
+        ) : isError || !job ? (
+          <Toast message="There are no results based on this job title" />
         ) : (
           <Card
-            title={job.title}
+            title={job?.title}
             id={job.id}
             pdl_count={job.pdl_count}
             top_related_titles={job.top_related_titles}
