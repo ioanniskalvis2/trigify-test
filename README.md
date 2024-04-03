@@ -53,6 +53,7 @@ A simple search engine for job titles using the t3 stack.
 - The issue is though that the top_related_tiles array is basically an array of other jobs, but we don't have access to all that data, so it isn't really possible to denormalise it, that's why I went with this design.
 - Another decision which I wouldn't usually make, but I did this time, was to make the getJobyByTitle procedure be based on the job title instead of the id of the job. The reason for this was, so we were able to access individual pages for the top_related_titles, since some of them do exist in the db.
 - I added a search model/table, which would be what I would do next to be able to save recent searches, based on the user's id and link that to the job title, so we could then show users their recent searches if they were authenticated.
+- TPRC includes error handling and type safety which is great.
 
 ### Issues 
 - The CSV file with the job data was not a in proper format, so I had to import it into a local database and then transform it to the same format of the Job table using the postgres array method.
