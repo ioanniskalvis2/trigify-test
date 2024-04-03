@@ -1,29 +1,66 @@
-# Create T3 App
+# Trigify test
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A simple search engine for job titles using the t3 stack.
 
-## What's next? How do I make an app with this?
+## Technologies
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+### Frontend
+- Next.js / Typescript
+- Tailwind CSS
+- Daisy UI
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+### Backend
+- Next.js / Typescript
+- Prisma ORM
+- TRPC
+- PostgreSQL 
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### Deployment
+- Vercel (the database is also hosted here) [live-site](https://trigify-test-kappa.vercel.app/)
 
-## Learn More
+### Authentication
+- Clerk
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Design
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### Database structure
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+#### Job table
 
-## How do I deploy this?
+| |id  | title | pdl_count| top_related_titles|
+|:---: |:---:   |:-------------:|:-------------:| :---: |
+| data type|int| string | int |string[]|
+| constraints|PK| -    |  - |-|
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+#### Search table
+
+| |id  | job_id   | created_at | user_id|
+|:---: |:---:   |:-------------:|:-------------:| :---: |
+| data type|int| int | DateTime |string|
+| constraints|PK| FK (Job.id)   | default(now()) |unique |
+
+### API structure
+
+#### Jobs
+
+| Procedure name  | Public   | Input | Output|
+|:---: |:---:   |:-------------:|:-------------:|
+| getJobs| Yes | searchQuery (string/nullish), take (number), skip (number) |Job[]|
+| getJobByTitle|Yes| jobTitle (string)   | Job |
+
+## Design Insights
+- I researched the documentation of the website that provided the sample data, so it was easy to know how this data was supposed to be structured, so I just reproduced it within the Job table.
+- The issue is though that the top_related_tiles array is basically an array of other jobs, but we don't have access to all that data, so it isn't really possible to denormalise it, that's why I went with this design.
+- Another decision which I wouldn't usually make, but I did this time, was to make the getJobyByTitle procedure be based on the job title instead of the id of the job. The reason for this was, so we were able to access individual pages for the top_related_titles, since some of them do exist in the db.
+- I added a search model/table, which would be what I would do next to be able to save recent searches, based on the user's id and link that to the job title, so we could then show users their recent searches if they were authenticated.
+- TPRC includes error handling and type safety which is great.
+
+### Issues 
+- The CSV file with the job data was not a in proper format, so I had to import it into a local database and then transform it to the same format of the Job table using the postgres array method.
+- I then had to export that data into a sql dump file and import it to the remote database which is hosted on vercel. I faced a few challenges with this, since it was difficult to synchronise the prisma table structure and all the sql instructions from the dump file. To resolve this I created the empty tables using npx prisma migrate and ended up making the dump file include only the insertions of the data, since both the local table and the table on the remote database, had the same structure.
+- Another issue I faced was when I tried to setup vitest to be able to create unit tests for the procedures. I kept running into issues with trying to mock the TRPC context and unfortunately I wasn't able to get it to work within the time limit.
+
+## Task management
+- Github issues (https://github.com/users/ioanniskalvis2/projects/2/views/1)
+
+
